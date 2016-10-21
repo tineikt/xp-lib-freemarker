@@ -1,0 +1,33 @@
+  buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven {
+            url 'http://repo.enonic.com/public'
+        }
+    }
+
+    dependencies {
+        classpath "com.enonic.xp:gradle-plugin:6.7.2-RC3"
+    }
+}
+
+apply plugin: 'com.enonic.xp.app'
+
+app {
+    name = project.appName
+    displayName = project.displayName
+    vendorName = 'TINE SA'
+    vendorUrl = 'http://www.tine.no/'
+}
+
+repositories {
+    jcenter()
+    maven { url 'http://repo.enonic.com/public' }
+}
+
+dependencies {
+    compile 'com.enonic.xp:core-api:6.7.2-RC3'
+    compile 'com.enonic.xp:portal-api:6.7.2-RC3'
+    compile group: 'org.freemarker', name: 'freemarker', version: '2.3.25-incubating'
+}
