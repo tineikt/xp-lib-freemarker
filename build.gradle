@@ -1,4 +1,4 @@
-  buildscript {
+buildscript {
     repositories {
         mavenLocal()
         jcenter()
@@ -8,7 +8,7 @@
     }
 
     dependencies {
-        classpath "com.enonic.xp:gradle-plugin:6.7.2-RC3"
+        classpath "com.enonic.xp:gradle-plugin:6.7.2"
     }
 }
 
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.enonic.xp:core-api:6.7.2-RC3'
-    compile 'com.enonic.xp:portal-api:6.7.2-RC3'
-    compile group: 'org.freemarker', name: 'freemarker', version: '2.3.25-incubating'
+    compile 'com.enonic.xp:core-api:6.7.2'
+    compile 'com.enonic.xp:portal-api:6.7.2'
+    compile 'org.freemarker:freemarker:2.3.25-incubating'		// incubating because Apache is evaluating it as a fullblown Apache project
 }

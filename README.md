@@ -1,2 +1,2 @@
-# lib-react
-Attempt at rendering React on the server side with Enonic XP
+# lib-freemarker
+Attempt at rendering Freemarker with Enonic XP

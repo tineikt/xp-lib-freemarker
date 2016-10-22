@@ -10,9 +10,7 @@ import com.enonic.xp.resource.ResourceService;
 import com.enonic.xp.script.ScriptValue;
 import com.google.common.collect.Maps;
 
-import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
-import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -24,27 +22,31 @@ public final class FreemarkerProcessor
     private ResourceKey view;
     private ResourceService resourceService;
     private ScriptValue model;
+    private Map<String, PortalViewFunction> viewFunctions;
     
     private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_25);
-    private static final StringTemplateLoader STRING_LOADER = new StringTemplateLoader();
-    
-    // Static init
-    {
+    //private static final StringTemplateLoader STRING_LOADER = new StringTemplateLoader();
+    //private static final Map<String, Long> TEMPLATE_LOADED_TIMESTAMP = new HashMap<>();
+        
+    public static void setupFreemarker(ResourceService resourceService) {
     	CONFIGURATION.setDefaultEncoding("UTF-8");
     	CONFIGURATION.setLogTemplateExceptions(false);
-    	CONFIGURATION.setClassLoaderForTemplateLoading(getClass().getClassLoader(), "/");			// Let's try to load templates from the class path
-    	
+
+    	// Let's support both loading templates from the class loader and from a local string cache.
     	CONFIGURATION.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] { 
-    			new ClassTemplateLoader(getClass().getClassLoader(), ""), 
-    			STRING_LOADER 
+    			new ResourceTemplateLoader(resourceService)//,
+    			//new ClassTemplateLoader(FreemarkerProcessor.class.getClassLoader(), ""), 
+    			//STRING_LOADER 
     	}));
-    	
+    	    	
     	//CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);		// Throws exceptions to log file
     	CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);		// Shows exceptions on screen
     }
 
-    public FreemarkerProcessor()
-    { }
+    public FreemarkerProcessor(Map<String, PortalViewFunction> viewFunctions)
+    { 
+    	this.viewFunctions = viewFunctions;
+    }
 
     public void setView( final ResourceKey view )
     {
@@ -83,13 +85,19 @@ public final class FreemarkerProcessor
         final Resource resource = resourceService.getResource( this.view );
         final Map<String, Object> map = this.model != null ? this.model.getMap() : Maps.newHashMap();
 
-        STRING_LOADER.putTemplate(resource.getKey().toString(), resource.readString());
+        map.putAll(this.viewFunctions);
         
-        Template template = CONFIGURATION.getTemplate(resource.getKey().toString());
+        String key = resource.getKey().toString();
+        
+        // Check if the template has already been loaded earlier. If not, we need to load it into the string loader.
+        //if(!TEMPLATE_LOADED_TIMESTAMP.containsKey(key) || TEMPLATE_LOADED_TIMESTAMP.get(key).longValue() != resource.getTimestamp()) {
+        //	STRING_LOADER.putTemplate(key, resource.readString());	
+        //}
+        
+        Template template = CONFIGURATION.getTemplate(key);
         
         StringWriter sw = new StringWriter();
         template.process(map, sw);
-        
         return sw.toString();
     }
     
