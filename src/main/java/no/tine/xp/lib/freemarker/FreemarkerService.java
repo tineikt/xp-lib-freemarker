@@ -16,7 +16,7 @@ public final class FreemarkerService implements ScriptBean
 {
     private ResourceService resourceService;
     private BeanContext context;
-    
+
     public FreemarkerService()
     { }
 
@@ -26,27 +26,27 @@ public final class FreemarkerService implements ScriptBean
         this.resourceService = context.getService( ResourceService.class ).get();
         FreemarkerProcessor.setupFreemarker(this.resourceService);
     }
-    
+
     public Object newProcessor() {
         FreemarkerProcessor freemarkerProcessor = new FreemarkerProcessor(createViewFunctions());
         freemarkerProcessor.setResourceService( resourceService );
         return freemarkerProcessor;
     }
-    
+
     private Map<String, PortalViewFunction> createViewFunctions() {
     	ViewFunctionService vfs = this.context.getService( ViewFunctionService.class ).get();
     	PortalRequest pr = PortalRequestAccessor.get();
-    	
+
     	// Make these portal functions available as user-defined functions. Should now be possible to do: <@imageUrl id="11" scale="width(200)"/>
     	List<String> functionNames = Arrays.asList(
     		new String[] { "pageUrl", "imageUrl", "assetUrl", "attachmentUrl", "componentUrl", "serviceUrl", "processHtml", "imagePlaceholder" }
     	);
-    	
+
     	Map<String, PortalViewFunction> functions = new HashMap<>();
-    	functionNames.forEach(fnName -> 
+    	functionNames.forEach(fnName ->
     		functions.put(fnName, new PortalViewFunction(fnName, vfs, pr))
     	);
-    	
+
         return functions;
     }
 

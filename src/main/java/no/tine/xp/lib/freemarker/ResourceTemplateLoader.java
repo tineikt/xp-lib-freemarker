@@ -17,28 +17,28 @@ import freemarker.cache.TemplateLoader;
 public class ResourceTemplateLoader implements TemplateLoader {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
-	private ResourceService resourceService; 
-	
+	private ResourceService resourceService;
+
 	public ResourceTemplateLoader(ResourceService rs) {
 		this.resourceService = rs;
 	}
-	
+
 	@Override
 	public Object findTemplateSource(String name) throws IOException {
 		logger.trace("Looking for file: [" + name + "]");
-		
+
 		String[] parts = StringUtils.split(name, ':');
 		if(parts.length != 2) {
 			return null;
 		}
-		
+
 		ResourceKeys keys = resourceService.findFiles(ApplicationKey.from(parts[0]), parts[1]);
 		if(keys.isEmpty()) {
 			return null;
 		}
-		
+
 		logger.warn("Found " + keys.getSize() + " file(s) matching " + name);
-		
+
 		final Resource resource = this.resourceService.getResource(keys.get(0));
 		return new ResourceTemplateSource(resource);
 	}

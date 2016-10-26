@@ -21,29 +21,29 @@ public class PortalViewFunction implements TemplateDirectiveModel {
 	protected ViewFunctionService viewFunctionService;
     protected PortalRequest portalRequest;
     protected String name;
-    
+
     public PortalViewFunction(String name, ViewFunctionService vfs, PortalRequest pr) {
 		this.name = name;
 		this.viewFunctionService = vfs;
 		this.portalRequest = pr;
 	}
-    
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
     	executeGenerics(env, (Map<String, TemplateModel>)params, loopVars, body);
     }
-    
+
 	public void executeGenerics(Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
 		List<String> args = params.entrySet().stream()
 				.map(e -> "_" + e.getKey() + "=" + e.getValue().toString())
 				.collect(Collectors.toList());
-		
+
 		final ViewFunctionParams vfParams = new ViewFunctionParams().name( name ).args( args ).portalRequest( this.portalRequest );
-		
+
 		Writer out = env.getOut();
 		out.append(this.viewFunctionService.execute( vfParams ).toString());
 		out.close();
 	}
 
-	
+
 }
