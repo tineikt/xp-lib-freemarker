@@ -32,6 +32,7 @@ public final class FreemarkerProcessor
     public static void setupFreemarker(ResourceService resourceService) {
     	CONFIGURATION.setDefaultEncoding("UTF-8");
     	CONFIGURATION.setLogTemplateExceptions(false);
+        CONFIGURATION.setTagSyntax(CONFIGURATION.AUTO_DETECT_TAG_SYNTAX);
 
         CONFIGURATION.setSharedVariable("component", new ComponentDirective());
 
