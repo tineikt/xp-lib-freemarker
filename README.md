@@ -9,9 +9,9 @@ Attempt at rendering Freemarker with Enonic XP
 Just as you are used to with Thymeleaf in your controller
 
 ```javascript
-  var freemarker = require('/lib/xp/freemarker');
-  exports.get = function(req) {
+var freemarker = require('/lib/xp/freemarker');
 
+exports.get = function(req) {
   var model = {
 
   }
@@ -32,7 +32,7 @@ Just as you are used to with Thymeleaf in your controller
 Example usage in Thymeleaf:
 ```html
 <a data-th-href="${portal.assetUrl({'_path=css/main.css'})}">Link</a>
-<img data-th-src="${portal.imageUrl({'_id=' + photo, '_scale=block(50,50)'})}"/>
+<img data-th-src="${portal.imageUrl({'_id=869b29a0-dccc-4d5e-afc5-81e5050a628d', '_scale=block(50,50)'})}"/>
 ```
 
 Example usage in Freemarker
