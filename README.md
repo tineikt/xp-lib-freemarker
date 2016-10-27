@@ -37,8 +37,8 @@ Example usage in Thymeleaf:
 
 Example usage in Freemarker
 ```html
-<a href=<@assetUrl path="css/main.css"/>>Link</a>
-<img src=<@imageUrl scale="block(50,50)" id="869b29a0-dccc-4d5e-afc5-81e5050a628d"/>>
+<a href="[@assetUrl path='css/main.css/']">Link</a>
+<img src="[@imageUrl scale='block(50,50)' id='869b29a0-dccc-4d5e-afc5-81e5050a628d'/]">
 ```
 
 ### Component reference
@@ -54,6 +54,6 @@ You are probably used to Thymeleaf and how some magic happens when you use the `
 This magic is implemented using a Freemarker directive, `<@component path=component.path />`
 The same template, in Freemarker would then be.
 ```html
-<#list regions.components as component>
-  <@component path=component.path />
-</#list>```
+[#list regions.components as component]
+  [@component path=component.path /]
+[/#list]```
