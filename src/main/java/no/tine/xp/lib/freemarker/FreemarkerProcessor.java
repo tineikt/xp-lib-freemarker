@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.enonic.xp.resource.Resource;
 import com.enonic.xp.resource.ResourceKey;
 import com.enonic.xp.resource.ResourceService;
@@ -24,15 +27,20 @@ public final class FreemarkerProcessor
     private ResourceService resourceService;
     private ScriptValue model;
     private Map<String, PortalViewFunction> viewFunctions;
-
+    private final static Logger log = LoggerFactory.getLogger(FreemarkerProcessor.class);
+    
     private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_25);
     //private static final StringTemplateLoader STRING_LOADER = new StringTemplateLoader();
     //private static final Map<String, Long> TEMPLATE_LOADED_TIMESTAMP = new HashMap<>();
 
+    public static void setupFreemarker(final FreemarkerConfig config) {
+    	CONFIGURATION.setDefaultEncoding(config.encoding());
+    }
+    
     public static void setupFreemarker(ResourceService resourceService) {
-    	CONFIGURATION.setDefaultEncoding("UTF-8");
+//    	CONFIGURATION.setDefaultEncoding("UTF-8");
     	CONFIGURATION.setLogTemplateExceptions(false);
-        CONFIGURATION.setTagSyntax(CONFIGURATION.AUTO_DETECT_TAG_SYNTAX);
+        CONFIGURATION.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
 
         CONFIGURATION.setSharedVariable("component", new ComponentDirective());
 
@@ -107,12 +115,16 @@ public final class FreemarkerProcessor
 
     private RuntimeException handleError( final TemplateException e )
     {
-        return new RuntimeException("Script error", e);
+    	String error = "Error with the script.";
+    	log.error(error, e);
+        return new RuntimeException(error, e);
     }
 
     private RuntimeException handleError( final IOException e )
     {
-        return new RuntimeException("Script error", e);
+    	String error = "IO with the script.";
+    	log.error(error, e);
+        return new RuntimeException(error, e);
     }
 
     private RuntimeException handleError( final RuntimeException e )
