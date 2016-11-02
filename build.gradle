@@ -1,33 +1,54 @@
 buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven {
-            url 'http://repo.enonic.com/public'
-        }
-    }
+	repositories {
+		mavenLocal()
+		jcenter()
+		maven {
+			url 'http://repo.enonic.com/public'
+		}
+	}
 
-    dependencies {
-        classpath "com.enonic.xp:gradle-plugin:6.7.2"
-    }
+	dependencies {
+		classpath "com.enonic.xp:gradle-plugin:6.7.2"
+	}
 }
 
 apply plugin: 'com.enonic.xp.app'
+//apply plugin: 'maven-publish'
 
 app {
-    name = project.appName
-    displayName = project.displayName
-    vendorName = 'TINE SA'
-    vendorUrl = 'http://www.tine.no/'
+	name = project.appName
+	displayName = project.displayName
+	vendorName = 'TINE SA'
+	vendorUrl = 'http://www.tine.no/'
 }
 
 repositories {
-    jcenter()
-    maven { url 'http://repo.enonic.com/public' }
+	jcenter()
+	maven { url 'http://repo.enonic.com/public' }
 }
-
+/*
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId 'xp-lib-freemarker'
+        }
+    }
+    repositories {
+        maven {
+        	credentials {
+            	username 'user'
+            	password 'password'
+        	}
+            // change to point to your repo, e.g. http://my.org/repo
+            url "https://trm.tine.no/nexus/content/repositories/enonic-xp"
+        }
+    }
+}
+*/
 dependencies {
-    compile 'com.enonic.xp:core-api:6.7.2'
-    compile 'com.enonic.xp:portal-api:6.7.2'
-    compile 'org.freemarker:freemarker:2.3.25-incubating'		// incubating because Apache is evaluating it as a fullblown Apache project
+	compile 'com.enonic.xp:core-api:6.7.2'
+	compile 'com.enonic.xp:portal-api:6.7.2'
+	compile 'org.freemarker:freemarker:2.3.25-incubating'		// incubating because Apache is evaluating it as a fullblown Apache project
+	include 'org.freemarker:freemarker:2.3.25-incubating'
 }
