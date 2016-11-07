@@ -39,7 +39,7 @@ public final class FreemarkerProcessor
 
         CONFIGURATION.setSharedVariable("component", new ComponentDirective());
 
-    	// Let's support both loading templates from the class loader and from a local string cache.
+    	// Let's load resources using our custom Enonic-based Resource Loader
     	CONFIGURATION.setTemplateLoader(new ResourceTemplateLoader(resourceService));
 
     	//CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);		// Throws exceptions to log file
@@ -106,7 +106,7 @@ public final class FreemarkerProcessor
     			.lineNumber(e.getLineNumber())
     			.resource(resource)
     			.cause(e)
-    			.message(e.getMessageWithoutStackTop().replaceAll("\n", "<br/>\n"))
+    			.message(e.getMessageWithoutStackTop())
     			.build();
     }
 
