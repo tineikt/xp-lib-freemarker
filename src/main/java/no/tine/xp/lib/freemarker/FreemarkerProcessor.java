@@ -9,17 +9,15 @@ import org.slf4j.LoggerFactory;
 
 import com.enonic.xp.resource.Resource;
 import com.enonic.xp.resource.ResourceKey;
+import com.enonic.xp.resource.ResourceProblemException;
 import com.enonic.xp.resource.ResourceService;
 import com.enonic.xp.script.ScriptValue;
 import com.google.common.collect.Maps;
 
-import freemarker.cache.MultiTemplateLoader;
-import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import no.tine.xp.lib.freemarker.ComponentDirective;
 
 public final class FreemarkerProcessor
 {
@@ -30,26 +28,19 @@ public final class FreemarkerProcessor
     private final static Logger log = LoggerFactory.getLogger(FreemarkerProcessor.class);
     
     private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_25);
-    //private static final StringTemplateLoader STRING_LOADER = new StringTemplateLoader();
-    //private static final Map<String, Long> TEMPLATE_LOADED_TIMESTAMP = new HashMap<>();
 
     public static void setupFreemarker(final FreemarkerConfig config) {
     	CONFIGURATION.setDefaultEncoding(config.encoding());
     }
     
     public static void setupFreemarker(ResourceService resourceService) {
-//    	CONFIGURATION.setDefaultEncoding("UTF-8");
     	CONFIGURATION.setLogTemplateExceptions(false);
         CONFIGURATION.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
 
         CONFIGURATION.setSharedVariable("component", new ComponentDirective());
 
     	// Let's support both loading templates from the class loader and from a local string cache.
-    	CONFIGURATION.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[] {
-    			new ResourceTemplateLoader(resourceService)//,
-    			//new ClassTemplateLoader(FreemarkerProcessor.class.getClassLoader(), ""),
-    			//STRING_LOADER
-    	}));
+    	CONFIGURATION.setTemplateLoader(new ResourceTemplateLoader(resourceService));
 
     	//CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);		// Throws exceptions to log file
     	CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);		// Shows exceptions on screen
@@ -100,12 +91,6 @@ public final class FreemarkerProcessor
         map.putAll(this.viewFunctions);
 
         String key = resource.getKey().toString();
-
-        // Check if the template has already been loaded earlier. If not, we need to load it into the string loader.
-        //if(!TEMPLATE_LOADED_TIMESTAMP.containsKey(key) || TEMPLATE_LOADED_TIMESTAMP.get(key).longValue() != resource.getTimestamp()) {
-        //	STRING_LOADER.putTemplate(key, resource.readString());
-        //}
-
         Template template = CONFIGURATION.getTemplate(key);
 
         StringWriter sw = new StringWriter();
@@ -115,9 +100,14 @@ public final class FreemarkerProcessor
 
     private RuntimeException handleError( final TemplateException e )
     {
-    	String error = "Error with the script.";
-    	log.error(error, e);
-        return new RuntimeException(error, e);
+    	final ResourceKey resource = e.getTemplateSourceName() != null ? ResourceKey.from( e.getTemplateSourceName() ) : null;
+    	
+    	return ResourceProblemException.create()
+    			.lineNumber(e.getLineNumber())
+    			.resource(resource)
+    			.cause(e)
+    			.message(e.getMessage())
+    			.build();
     }
 
     private RuntimeException handleError( final IOException e )
