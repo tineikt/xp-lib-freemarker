@@ -106,7 +106,7 @@ public final class FreemarkerProcessor
     			.lineNumber(e.getLineNumber())
     			.resource(resource)
     			.cause(e)
-    			.message(e.getMessage())
+    			.message(e.getMessageWithoutStackTop().replaceAll("\n", "<br/>\n"))
     			.build();
     }
 
