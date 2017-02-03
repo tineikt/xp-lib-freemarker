@@ -3,7 +3,26 @@ Attempt at rendering Freemarker with Enonic XP
 
 ## Installation
 
-...
+The most straight forward way to get it going is probably jitpack, which builds and makes a public github repo available as a gradle dependency on-the-fly:
+
+Step 1: Add it in your root build.gradle at the end of repositories:
+```javascript
+allprojects {
+  repositories {
+    ...
+    maven { url 'https://jitpack.io' }
+  }
+}
+``` 
+  
+Step 2. Add the dependency
+```javascript
+dependencies {
+  include 'com.github.tineikt:xp-lib-freemarker:0.9'
+}
+```
+
+Hopefully this should allow jitpack to build the project, and present it as a standard gradle package for Enonic XP :)
 
 ## Usage
 Just as you are used to with Thymeleaf in your controller
