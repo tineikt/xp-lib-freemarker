@@ -18,7 +18,7 @@ allprojects {
 Step 2. Add the dependency
 ```javascript
 dependencies {
-  include 'com.github.tineikt:xp-lib-freemarker:0.9'
+  include 'com.github.tineikt:xp-lib-freemarker:0.9.2'
 }
 ```
 
