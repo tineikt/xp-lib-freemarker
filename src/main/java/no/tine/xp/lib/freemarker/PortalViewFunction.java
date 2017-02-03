@@ -21,9 +21,12 @@ public class PortalViewFunction implements TemplateDirectiveModel {
 	protected ViewFunctionService viewFunctionService;
     protected PortalRequest portalRequest;
     protected String name;
+    protected List<String> builtinParams;
 
-    public PortalViewFunction(String name, ViewFunctionService vfs, PortalRequest pr) {
-		this.name = name;
+    public PortalViewFunction(ViewFunctionSpec fnSpec, ViewFunctionService vfs, PortalRequest pr) {
+		this.name = fnSpec.getName();
+		this.builtinParams = fnSpec.getPredefinedParameters();
+		
 		this.viewFunctionService = vfs;
 		this.portalRequest = pr;
 	}
@@ -35,7 +38,7 @@ public class PortalViewFunction implements TemplateDirectiveModel {
 
 	public void executeGenerics(Environment env, Map<String, TemplateModel> params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
 		List<String> args = params.entrySet().stream()
-				.map(e -> "_" + e.getKey() + "=" + e.getValue().toString())
+				.map(this::mapArgKeys)
 				.collect(Collectors.toList());
 
 		final ViewFunctionParams vfParams = new ViewFunctionParams().name( name ).args( args ).portalRequest( this.portalRequest );
@@ -45,5 +48,13 @@ public class PortalViewFunction implements TemplateDirectiveModel {
 		out.close();
 	}
 
-
+	private String mapArgKeys(Map.Entry<String, TemplateModel> e) {
+		if(builtinParams.contains(e.getKey())) {
+			// Built-in parameters like path and id needs to be prefixed with underscore.
+			return "_" + e.getKey() + "=" + e.getValue().toString();
+		} else {
+			// Other parameters does not need this.
+			return e.getKey() + "=" + e.getValue().toString();
+		}
+	}
 }

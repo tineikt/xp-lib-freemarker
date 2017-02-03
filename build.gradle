@@ -8,10 +8,11 @@ buildscript {
 	}
 
 	dependencies {
-		classpath "com.enonic.xp:gradle-plugin:6.7.3"
+		classpath "com.enonic.xp:gradle-plugin:6.9.0"
 	}
 }
 
+apply plugin: 'maven-publish'
 apply plugin: 'com.enonic.xp.app'
 
 app {
@@ -27,7 +28,28 @@ repositories {
 }
 
 dependencies {
-	compile 'com.enonic.xp:core-api:6.7.3'
-	compile 'com.enonic.xp:portal-api:6.7.3'
-	compile 'org.freemarker:freemarker:2.3.25-incubating'		// incubating because Apache is evaluating it as a fullblown Apache project
+	compile 'com.enonic.xp:core-api:6.9.0'
+	compile 'com.enonic.xp:portal-api:6.9.0'
+	compile 'org.freemarker:freemarker:2.3.25-incubating'
+}
+
+publishing {
+    publications {
+        maven( MavenPublication ) {
+            groupId "no.tine.xp"
+            artifactId "xp-lib-freemarker"
+            version "$version"
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+			name "xp-lib-freemarker"
+            credentials {
+                username "$nexusUser"
+                password "$nexusPassword"
+            }
+            url "https://trm.tine.no/nexus/content/repositories/enonic-xp/"
+        }
+    }
 }
