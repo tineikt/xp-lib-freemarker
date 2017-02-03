@@ -37,7 +37,7 @@ public class ResourceTemplateLoader implements TemplateLoader {
 			return null;
 		}
 
-		logger.warn("Found " + keys.getSize() + " file(s) matching " + name);
+		logger.trace("Found " + keys.getSize() + " file(s) matching " + name);
 
 		final Resource resource = this.resourceService.getResource(keys.get(0));
 		return new ResourceTemplateSource(resource);
