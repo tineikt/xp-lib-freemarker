@@ -32,3 +32,14 @@ dependencies {
 	compile 'com.enonic.xp:portal-api:6.9.0'
 	compile 'org.freemarker:freemarker:2.3.25-incubating'
 }
+
+publishing {
+    publications {
+        maven( MavenPublication ) {
+            groupId "no.tine.xp"
+            artifactId "xp-lib-freemarker"
+            version "$version"
+            from components.java
+        }
+    }
+}
