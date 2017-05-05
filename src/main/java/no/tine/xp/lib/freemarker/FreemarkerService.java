@@ -19,11 +19,11 @@ public final class FreemarkerService implements ScriptBean
     private BeanContext context;
 
     private List<ViewFunctionSpec> viewFunctions;
-    
+
     public FreemarkerService()
-    { 
+    {
     	viewFunctions = new ArrayList<>();
-    	
+
     	// Make these portal functions available as user-defined functions. Should now be possible to do: <@imageUrl id="11" scale="width(200)" customParam="123" />
     	viewFunctions.add(new ViewFunctionSpec("pageUrl", "id", "path", "type"));
     	viewFunctions.add(new ViewFunctionSpec("imageUrl", "id", "path", "format", "scale", "quality", "background", "filter", "type"));
@@ -33,6 +33,7 @@ public final class FreemarkerService implements ScriptBean
     	viewFunctions.add(new ViewFunctionSpec("serviceUrl", "service", "application", "type"));
     	viewFunctions.add(new ViewFunctionSpec("processHtml", "value", "type"));
     	viewFunctions.add(new ViewFunctionSpec("imagePlaceholder"));
+		viewFunctions.add(new ViewFunctionSpec("i18n.localize", "key", "locale"));
     }
 
     @Override
@@ -53,12 +54,20 @@ public final class FreemarkerService implements ScriptBean
     	PortalRequest pr = PortalRequestAccessor.get();
 
     	Map<String, PortalViewFunction> functions = new HashMap<>();
-    	    	
+
     	viewFunctions.forEach(fn ->
-    		functions.put(fn.getName(), new PortalViewFunction(fn, vfs, pr))
+    		functions.put(directiveName(fn.getName()), new PortalViewFunction(fn, vfs, pr))
     	);
 
         return functions;
     }
+
+	private String directiveName(String functionName) {
+		if(functionName.indexOf(".") > 0) {
+			String[] names = functionName.split("\\.");
+			return names[names.length - 1];
+		}
+		return functionName;
+	}
 
 }
