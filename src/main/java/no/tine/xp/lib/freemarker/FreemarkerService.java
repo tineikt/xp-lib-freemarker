@@ -33,7 +33,7 @@ public final class FreemarkerService implements ScriptBean
     	viewFunctions.add(new ViewFunctionSpec("serviceUrl", "service", "application", "type"));
     	viewFunctions.add(new ViewFunctionSpec("processHtml", "value", "type"));
     	viewFunctions.add(new ViewFunctionSpec("imagePlaceholder"));
-        viewFunctions.add(new ViewFunctionSpec("localize", "key"));
+		viewFunctions.add(new ViewFunctionSpec("i18n.localize", "key", "locale"));
     }
 
     @Override
@@ -56,10 +56,18 @@ public final class FreemarkerService implements ScriptBean
     	Map<String, PortalViewFunction> functions = new HashMap<>();
 
     	viewFunctions.forEach(fn ->
-    		functions.put(fn.getName(), new PortalViewFunction(fn, vfs, pr))
+    		functions.put(directiveName(fn.getName()), new PortalViewFunction(fn, vfs, pr))
     	);
 
         return functions;
     }
+
+	private String directiveName(String functionName) {
+		if(functionName.indexOf(".") > 0) {
+			String[] names = functionName.split("\\.");
+			return names[names.length - 1];
+		}
+		return functionName;
+	}
 
 }

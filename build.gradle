@@ -42,14 +42,4 @@ publishing {
             from components.java
         }
     }
-    repositories {
-        maven {
-			name "xp-lib-freemarker"
-            credentials {
-                username "$nexusUser"
-                password "$nexusPassword"
-            }
-            url "https://trm.tine.no/nexus/content/repositories/enonic-xp/"
-        }
-    }
 }
