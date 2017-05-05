@@ -13,8 +13,8 @@ allprojects {
     maven { url 'https://jitpack.io' }
   }
 }
-``` 
-  
+```
+
 Step 2. Add the dependency
 ```javascript
 dependencies {
@@ -56,7 +56,7 @@ Example usage in Thymeleaf:
 
 Example usage in Freemarker
 ```html
-<a href="[@assetUrl path='css/main.css/']">Link</a>
+<a href="[@assetUrl path='css/main.css'/]">Link</a>
 <img src="[@imageUrl scale='block(50,50)' id='869b29a0-dccc-4d5e-afc5-81e5050a628d'/]">
 ```
 
