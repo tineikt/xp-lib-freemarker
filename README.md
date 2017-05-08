@@ -18,7 +18,7 @@ allprojects {
 Step 2. Add the dependency
 ```javascript
 dependencies {
-  include 'com.github.tineikt:xp-lib-freemarker:0.9.2'
+  include 'com.github.tineikt:xp-lib-freemarker:0.9.3'
 }
 ```
 
@@ -52,12 +52,15 @@ Example usage in Thymeleaf:
 ```html
 <a data-th-href="${portal.assetUrl({'_path=css/main.css'})}">Link</a>
 <img data-th-src="${portal.imageUrl({'_id=869b29a0-dccc-4d5e-afc5-81e5050a628d', '_scale=block(50,50)'})}"/>
+<p data-th-text="${portal.localize({'_key=mystring','_locale=en'})}">Not translated</p>
 ```
 
 Example usage in Freemarker
 ```html
 <a href="[@assetUrl path='css/main.css'/]">Link</a>
 <img src="[@imageUrl scale='block(50,50)' id='869b29a0-dccc-4d5e-afc5-81e5050a628d'/]">
+<p>[@localize locale='en' key='mystring'/]</p>
+
 ```
 
 ### Component reference
