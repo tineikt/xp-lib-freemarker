@@ -63,6 +63,10 @@ Example usage in Freemarker
 
 ```
 
+### Freemarker documentation
+
+[What is Apache FreeMarker™?](https://freemarker.apache.org/)
+
 ### Component reference
 
 Enonic XP does some post-processing to retrieve and render components.
