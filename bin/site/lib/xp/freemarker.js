@@ -2,9 +2,9 @@
  * Freemarker template related functions.
  *
  * @example
- * var freemarkerLib = require('/lib/xp/freemarker');
+ * var freemarkerLib = require('/lib/tineikt/freemarker');
  *
- * @module lib/xp/freemarker
+ * @module lib/tineikt/freemarker
  */
 
 var service = __.newBean('no.tine.xp.lib.freemarker.FreemarkerService');
