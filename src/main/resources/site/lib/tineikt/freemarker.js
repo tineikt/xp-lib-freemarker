@@ -2,7 +2,7 @@
  * Freemarker template related functions.
  *
  * @example
- * var freemarkerLib = require('/lib/xp/freemarker');
+ * var freemarkerLib = require('/lib/tineikt/freemarker');
  *
  * @module lib/xp/freemarker
  */
