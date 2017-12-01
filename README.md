@@ -1,4 +1,4 @@
-# lib-freemarker
+# ![TINE Logo](https://webfiles.tine.no/Logo/TINE-logo.svg) lib-freemarker
 Attempt at rendering Freemarker with Enonic XP
 
 ## Installation
