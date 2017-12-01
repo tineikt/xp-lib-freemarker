@@ -56,7 +56,7 @@ Example usage in Thymeleaf:
 ```
 
 Example usage in Freemarker
-```html
+```ftl
 <a href="[@assetUrl path='css/main.css'/]">Link</a>
 <img src="[@imageUrl scale='block(50,50)' id='869b29a0-dccc-4d5e-afc5-81e5050a628d'/]">
 <p>[@localize locale='en' key='mystring'/]</p>
