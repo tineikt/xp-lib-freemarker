@@ -18,7 +18,7 @@ allprojects {
 Step 2. Add the dependency
 ```javascript
 dependencies {
-  include 'com.github.tineikt:xp-lib-freemarker:1.0.0'
+  include 'com.github.tineikt:xp-lib-freemarker:1.1.0'
 }
 ```
 
@@ -28,7 +28,7 @@ Hopefully this should allow jitpack to build the project, and present it as a st
 Just as you are used to with Thymeleaf in your controller
 
 ```javascript
-var freemarker = require('/lib/xp/freemarker');
+var freemarker = require('/lib/tineikt/freemarker');
 
 exports.get = function(req) {
   var model = {
