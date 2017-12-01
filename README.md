@@ -1,4 +1,4 @@
-# <img src="https://webfiles.tine.no/Logo/TINE-logo.svg" alt="Drawing" style="width: 40px;"/> lib-freemarker
+# ![TINE Logo](https://webfiles.tine.no/Logo/TINE-logo.svg | width=40) lib-freemarker
 Attempt at rendering Freemarker with Enonic XP
 
 ## Installation
