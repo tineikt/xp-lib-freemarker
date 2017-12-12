@@ -16,7 +16,7 @@ var service = __.newBean('no.tine.xp.lib.freemarker.FreemarkerService');
  * @param {object} model Model that is passed to the view.
  * @returns {string} The rendered output.
  */
-exports.render = function (view, model, isViewString) {
+exports.render = function (view, model) {
     var processor = service.newProcessor();
     processor.view = view;
     processor.model = __.toScriptValue(model);
