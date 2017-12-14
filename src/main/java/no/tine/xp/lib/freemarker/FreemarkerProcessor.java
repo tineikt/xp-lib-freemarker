@@ -18,15 +18,18 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import freemarker.cache.StringTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.TemplateLoader;
 
 public final class FreemarkerProcessor
 {
+    private String viewString = null;
     private ResourceKey view;
     private ResourceService resourceService;
     private ScriptValue model;
     private Map<String, PortalViewFunction> viewFunctions;
     private final static Logger log = LoggerFactory.getLogger(FreemarkerProcessor.class);
-    
     private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_25);
 
     public static void setupFreemarker(final FreemarkerConfig config) {
@@ -42,7 +45,7 @@ public final class FreemarkerProcessor
     	// Let's load resources using our custom Enonic-based Resource Loader
     	CONFIGURATION.setTemplateLoader(new ResourceTemplateLoader(resourceService));
 
-    	//CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);		// Throws exceptions to log file
+        //CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);		// Throws exceptions to log file
     	CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);		// Shows exceptions on screen
     }
 
@@ -51,9 +54,18 @@ public final class FreemarkerProcessor
     	this.viewFunctions = viewFunctions;
     }
 
-    public void setView( final ResourceKey view )
+    public void setViewString( final String viewString )
     {
-        this.view = view;
+        this.viewString = viewString;
+    }
+
+    public void setView( final Object view )
+    {
+        if(view instanceof String){
+            this.viewString = (String) view;
+        }else{
+            this.view = (ResourceKey) view;
+        }
     }
 
     public void setModel( final ScriptValue model )
@@ -64,7 +76,11 @@ public final class FreemarkerProcessor
     public String process()
     {
         try {
-            return doProcess();
+            if(this.viewString != null){
+                return doProcessViewString();
+            }else{
+                return doProcessView();
+            }
         }
         catch ( final TemplateException e ) {
         	throw handleError( e );
@@ -83,20 +99,35 @@ public final class FreemarkerProcessor
         this.resourceService = resourceService;
     }
 
-    private String doProcess() throws IOException, TemplateException
+    private String doProcessView() throws IOException, TemplateException
     {
         final Resource resource = resourceService.getResource( this.view );
-        final Map<String, Object> map = this.model != null ? this.model.getMap() : Maps.newHashMap();
-
-        map.putAll(this.viewFunctions);
 
         String key = resource.getKey().toString();
         Template template = CONFIGURATION.getTemplate(key);
 
+        return doProcessTemplate(template);
+    }
+
+
+    private String doProcessViewString() throws IOException, TemplateException
+    {
+        return doProcessTemplate(new Template( "tmplName_" + System.currentTimeMillis(),  viewString , CONFIGURATION));
+    }
+
+
+    private String doProcessTemplate(Template template) throws IOException, TemplateException
+    {
+        final Map<String, Object> map = this.model != null ? this.model.getMap() : Maps.newHashMap();
+
+        map.putAll(this.viewFunctions);
+
         StringWriter sw = new StringWriter();
         template.process(map, sw);
+
         return sw.toString();
     }
+
 
     private RuntimeException handleError( final TemplateException e )
     {
