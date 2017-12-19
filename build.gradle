@@ -28,9 +28,9 @@ repositories {
 }
 
 dependencies {
-	compile 'com.enonic.xp:core-api:6.9.0'
-	compile 'com.enonic.xp:portal-api:6.9.0'
-	compile 'org.freemarker:freemarker:2.3.25-incubating'
+	compile 'com.enonic.xp:core-api:${xpVersion}'
+	compile 'com.enonic.xp:portal-api:${xpVersion}'
+	compile 'org.freemarker:freemarker:2.3.27-incubating'
 }
 
 publishing {
