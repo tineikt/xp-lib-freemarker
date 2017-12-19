@@ -1,36 +1,31 @@
-buildscript {
-	repositories {
-		mavenLocal()
-		jcenter()
-		maven {
-			url 'http://repo.enonic.com/public'
-		}
-	}
-
-	dependencies {
-		classpath "com.enonic.xp:gradle-plugin:6.9.0"
-	}
+plugins {
+  id 'maven-publish'
+  id "com.enonic.xp.app" version "1.0.13"
 }
 
-apply plugin: 'maven-publish'
-apply plugin: 'com.enonic.xp.app'
+compileJava.options.encoding = "UTF-8"
+
+xp {
+  version = xpVersion
+}
 
 app {
 	name = project.appName
 	displayName = project.displayName
-	vendorName = 'TINE SA'
-	vendorUrl = 'http://www.tine.no/'
-}
-
-repositories {
-	jcenter()
-	maven { url 'http://repo.enonic.com/public' }
+	vendorName = project.ext.vendorName
+	vendorUrl = project.ext.vendorUrl
 }
 
 dependencies {
-	compile 'com.enonic.xp:core-api:${xpVersion}'
-	compile 'com.enonic.xp:portal-api:${xpVersion}'
-	compile 'org.freemarker:freemarker:2.3.27-incubating'
+	compile "com.enonic.xp:core-api:${xpVersion}"
+  	compile "com.enonic.xp:portal-api:${xpVersion}"
+	compile "org.freemarker:freemarker:2.3.27-incubating"
+}
+
+repositories {
+	mavenLocal()
+	jcenter()
+	xp.enonicRepo()
 }
 
 publishing {
