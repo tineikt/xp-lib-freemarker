@@ -12,8 +12,8 @@ xp {
 app {
 	name = project.appName
 	displayName = project.displayName
-	vendorName = project.ext.vendorName
-	vendorUrl = project.ext.vendorUrl
+	vendorName = project.vendorName
+	vendorUrl = project.vendorUrl
 }
 
 dependencies {
@@ -33,8 +33,9 @@ publishing {
         maven( MavenPublication ) {
             groupId "no.tine.xp"
             artifactId "xp-lib-freemarker"
-            version "$version"
+            version "${version}"
             from components.java
         }
     }
 }
+version = "${jarVersion}"
