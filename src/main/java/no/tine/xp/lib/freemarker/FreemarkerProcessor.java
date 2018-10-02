@@ -19,106 +19,96 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
-public final class FreemarkerProcessor
-{
-    private ResourceKey view;
-    private ResourceService resourceService;
-    private ScriptValue model;
-    private Map<String, PortalViewFunction> viewFunctions;
-    private final static Logger log = LoggerFactory.getLogger(FreemarkerProcessor.class);
-    
-    private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_25);
+public final class FreemarkerProcessor {
+	private ResourceKey view;
+	private ResourceService resourceService;
+	private ScriptValue model;
+	private Map<String, PortalViewFunction> viewFunctions;
+	private final static Logger log = LoggerFactory.getLogger(FreemarkerProcessor.class);
 
-    public static void setupFreemarker(final FreemarkerConfig config) {
-    	CONFIGURATION.setDefaultEncoding(config.encoding());
-    }
-    
-    public static void setupFreemarker(ResourceService resourceService) {
-    	CONFIGURATION.setLogTemplateExceptions(false);
-        CONFIGURATION.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
+	private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_25);
 
-        CONFIGURATION.setSharedVariable("component", new ComponentDirective());
+	public static void setupFreemarker(final FreemarkerConfig config) {
+		CONFIGURATION.setDefaultEncoding(config.encoding());
+	}
 
-    	// Let's load resources using our custom Enonic-based Resource Loader
-    	CONFIGURATION.setTemplateLoader(new ResourceTemplateLoader(resourceService));
+	public static void setupFreemarker(ResourceService resourceService) {
+		CONFIGURATION.setLogTemplateExceptions(false);
+		CONFIGURATION.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
 
-    	//CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);		// Throws exceptions to log file
-    	CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);		// Shows exceptions on screen
-    }
+		CONFIGURATION.setSharedVariable("component", new ComponentDirective());
 
-    public FreemarkerProcessor(Map<String, PortalViewFunction> viewFunctions)
-    {
-    	this.viewFunctions = viewFunctions;
-    }
+		// Remove lookup for localized files (template.ftl => template_en_EN.ftl, template_en.ftl, template.ftl)
+		// Should improve performance in dev mode, where some machines have slow file lookup
+		CONFIGURATION.setLocalizedLookup(false);
 
-    public void setView( final ResourceKey view )
-    {
-        this.view = view;
-    }
+		// Let's load resources using our custom Enonic-based Resource Loader
+		CONFIGURATION.setTemplateLoader(new ResourceTemplateLoader(resourceService));
 
-    public void setModel( final ScriptValue model )
-    {
-        this.model = model;
-    }
+		//CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);		// Throws exceptions to log file
+		CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);      // Shows exceptions on screen
+	}
 
-    public String process()
-    {
-        try {
-            return doProcess();
-        }
-        catch ( final TemplateException e ) {
-        	throw handleError( e );
-        }
-        catch ( final IOException e) {
-        	throw handleError( e );
-        }
-        catch ( final RuntimeException e )
-        {
-            throw handleError( e );
-        }
-    }
+	public FreemarkerProcessor(Map<String, PortalViewFunction> viewFunctions) {
+		this.viewFunctions = viewFunctions;
+	}
 
-    public void setResourceService( final ResourceService resourceService )
-    {
-        this.resourceService = resourceService;
-    }
+	public void setView(final ResourceKey view) {
+		this.view = view;
+	}
 
-    private String doProcess() throws IOException, TemplateException
-    {
-        final Resource resource = resourceService.getResource( this.view );
-        final Map<String, Object> map = this.model != null ? this.model.getMap() : Maps.newHashMap();
+	public void setModel(final ScriptValue model) {
+		this.model = model;
+	}
 
-        map.putAll(this.viewFunctions);
+	public String process() {
+		try {
+			return doProcess();
+		} catch (final TemplateException e) {
+			throw handleError(e);
+		} catch (final IOException e) {
+			throw handleError(e);
+		} catch (final RuntimeException e) {
+			throw handleError(e);
+		}
+	}
 
-        String key = resource.getKey().toString();
-        Template template = CONFIGURATION.getTemplate(key);
+	public void setResourceService(final ResourceService resourceService) {
+		this.resourceService = resourceService;
+	}
 
-        StringWriter sw = new StringWriter();
-        template.process(map, sw);
-        return sw.toString();
-    }
+	private String doProcess() throws IOException, TemplateException {
+		final Resource resource = resourceService.getResource(this.view);
+		final Map<String, Object> map = this.model != null ? this.model.getMap() : Maps.newHashMap();
 
-    private RuntimeException handleError( final TemplateException e )
-    {
-    	final ResourceKey resource = e.getTemplateSourceName() != null ? ResourceKey.from( e.getTemplateSourceName() ) : null;
-    	
-    	return ResourceProblemException.create()
-    			.lineNumber(e.getLineNumber())
-    			.resource(resource)
-    			.cause(e)
-    			.message(e.getMessageWithoutStackTop())
-    			.build();
-    }
+		map.putAll(this.viewFunctions);
 
-    private RuntimeException handleError( final IOException e )
-    {
-    	String error = "IO with the script.";
-    	log.error(error, e);
-        return new RuntimeException(error, e);
-    }
+		String key = resource.getKey().toString();
+		Template template = CONFIGURATION.getTemplate(key);
 
-    private RuntimeException handleError( final RuntimeException e )
-    {
-        return e;
-    }
+		StringWriter sw = new StringWriter();
+		template.process(map, sw);
+		return sw.toString();
+	}
+
+	private RuntimeException handleError(final TemplateException e) {
+		final ResourceKey resource = e.getTemplateSourceName() != null ? ResourceKey.from(e.getTemplateSourceName()) : null;
+
+		return ResourceProblemException.create()
+			.lineNumber(e.getLineNumber())
+			.resource(resource)
+			.cause(e)
+			.message(e.getMessageWithoutStackTop())
+			.build();
+	}
+
+	private RuntimeException handleError(final IOException e) {
+		String error = "IO with the script.";
+		log.error(error, e);
+		return new RuntimeException(error, e);
+	}
+
+	private RuntimeException handleError(final RuntimeException e) {
+		return e;
+	}
 }
