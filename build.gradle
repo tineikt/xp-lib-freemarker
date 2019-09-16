@@ -51,4 +51,4 @@ publishing {
 }
 
 version = "${jarVersion}"
-jar.archiveName = "xp-lib-freemarker"
+jar.archiveName = "xp-lib-freemarker.jar"
