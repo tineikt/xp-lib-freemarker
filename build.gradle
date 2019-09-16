@@ -1,6 +1,6 @@
 plugins {
   id 'maven-publish'
-  id "com.enonic.xp.app" version "1.0.17"
+  id "com.enonic.xp.app" version "1.2.0"
 }
 
 compileJava.options.encoding = "UTF-8"
@@ -12,8 +12,8 @@ xp {
 app {
 	name = project.appName
 	displayName = project.displayName
-	vendorName = project.vendorName
-	vendorUrl = project.vendorUrl
+	vendorName = 'TINE SA'
+	vendorUrl = 'https://www.tine.no'
 	systemVersion = xpVersion
 }
 
@@ -51,4 +51,4 @@ publishing {
 }
 
 version = "${jarVersion}"
-jar.archiveName = "${jar.baseName}.${jar.extension}"
+jar.archiveName = "xp-lib-freemarker"
