@@ -30,13 +30,25 @@ repositories {
 }
 
 publishing {
-    publications {
-        maven( MavenPublication ) {
-            groupId "no.tine.xp"
-            artifactId "xp-lib-freemarker"
-            version "${version}"
-            from components.java
-        }
-    }
+	publications {
+		maven( MavenPublication ) {
+			groupId 'no.tine.xp'
+			artifactId 'xp-lib-freemarker'
+			version "$version"
+			from components.java
+		}
+	}
+
+	repositories {
+		maven {
+			url 'https://pkgs.dev.azure.com/tine-sa/_packaging/digitale-flater/maven/v1'
+			credentials {
+				username "AZURE_ARTIFACTS"
+				password System.getenv("AZURE_ARTIFACTS_ENV_ACCESS_TOKEN") ?: "${azureArtifactsGradleAccessToken}"
+			}
+		}
+	}
 }
+
 version = "${jarVersion}"
+jar.archiveName = "${jar.baseName}.${jar.extension}"
