@@ -19,10 +19,11 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: false
-    tasks: 'build'
+    tasks: 'generatePomFileForMavenPublication build'
 - task: CopyFiles@2
   inputs:
     Contents: |
+     build/publications/maven/pom-default.xml
      build/libs/**/*.jar
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 - task: PublishBuildArtifacts@1
