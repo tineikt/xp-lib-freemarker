@@ -19,7 +19,7 @@ steps:
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: false
-    tasks: 'generatePomFileForMavenPublication build'
+    tasks: 'generatePomFileForMavenPublication -Pversion=$(Build.BuildNumber) build'
 - task: CopyFiles@2
   inputs:
     Contents: |
