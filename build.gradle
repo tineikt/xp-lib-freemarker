@@ -1,5 +1,6 @@
 plugins {
   id 'maven-publish'
+  id 'java'
   id "com.enonic.xp.app" version "1.2.0"
 }
 
@@ -50,5 +51,4 @@ publishing {
 	}
 }
 
-version = "${jarVersion}"
 jar.archiveName = "${jar.baseName}.${jar.extension}"
