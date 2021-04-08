@@ -1,7 +1,7 @@
 plugins {
   id 'maven-publish'
   id 'java'
-  id "com.enonic.xp.app" version "1.2.0"
+  id "com.enonic.xp.app" version "2.0.0"
 }
 
 compileJava.options.encoding = "UTF-8"
@@ -20,8 +20,8 @@ app {
 
 dependencies {
 	compile "com.enonic.xp:core-api:${xpVersion}"
-  	compile "com.enonic.xp:portal-api:${xpVersion}"
-	compile "org.freemarker:freemarker:2.3.27-incubating"
+  compile "com.enonic.xp:portal-api:${xpVersion}"
+	compile "org.freemarker:freemarker:2.3.31"
 }
 
 repositories {
