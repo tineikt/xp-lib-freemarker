@@ -34,7 +34,7 @@ publishing {
 	publications {
 		maven( MavenPublication ) {
 			groupId 'no.tine.xp'
-			artifactId 'xp-lib-freemarker'
+			artifactId 'xp-lib-freemarker-xp7'
 			version "$version"
 			from components.java
 		}
