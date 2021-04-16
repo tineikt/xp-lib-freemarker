@@ -1,5 +1,5 @@
 # <a href="https://www.tine.no/"><img src="https://webfiles.tine.no/Logo/TINE-logo.svg" alt="TINE Logo" width="70" align="right"></a> lib-freemarker
-Attempt at rendering Freemarker with Enonic XP
+Freemarker library for Enonic XP
 
 ## Installation
 
@@ -16,9 +16,16 @@ allprojects {
 ```
 
 Step 2. Add the dependency
-```javascript
+If you are on an Enonic XP 6.15 add the dependency like this:
+```groovy
 dependencies {
   include 'com.github.tineikt:xp-lib-freemarker:1.1.1'
+}
+```
+If you are on an Enonic XP 7 add the dependency like this:
+```groovy
+dependencies {
+  include 'no.tine.xp:xp-lib-freemarker:2.0.0'
 }
 ```
 
