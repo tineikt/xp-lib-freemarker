@@ -10,6 +10,9 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: MavenAuthenticate@0
+  inputs:
+    artifactsFeeds: 'digitale-flater'
 - task: Gradle@2
   inputs:
     workingDirectory: ''
