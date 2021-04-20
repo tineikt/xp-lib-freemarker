@@ -3,7 +3,10 @@ plugins {
 	id 'java'
 	id "com.enonic.xp.app" version "2.0.0"
 	id "net.linguica.maven-settings" version "0.5"
+	id 'pl.allegro.tech.build.axion-release' version '1.11.0'
 }
+
+version = scmVersion.version
 
 compileJava.options.encoding = "UTF-8"
 
