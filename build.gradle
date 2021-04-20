@@ -1,7 +1,8 @@
 plugins {
-  id 'maven-publish'
-  id 'java'
-  id "com.enonic.xp.app" version "2.0.0"
+	id 'maven-publish'
+	id 'java'
+	id "com.enonic.xp.app" version "2.0.0"
+	id "net.linguica.maven-settings" version "0.5"
 }
 
 compileJava.options.encoding = "UTF-8"
@@ -25,8 +26,7 @@ dependencies {
 }
 
 repositories {
-	mavenLocal()
-	jcenter()
+	mavenCentral()
 	xp.enonicRepo()
 }
 
@@ -43,12 +43,12 @@ publishing {
 	repositories {
 		maven {
 			url 'https://pkgs.dev.azure.com/tine-sa/_packaging/digitale-flater/maven/v1'
-			credentials {
-				username "AZURE_ARTIFACTS"
-				password System.getenv("AZURE_ARTIFACTS_ENV_ACCESS_TOKEN") ?: "${azureArtifactsGradleAccessToken}"
+			name 'digitale-flater'
+			authentication {
+				basic(BasicAuthentication)
 			}
 		}
 	}
 }
 
-jar.archiveName = "${jar.baseName}.${jar.extension}"
+//jar.archiveName = "${jar.baseName}.${jar.extension}"
