@@ -6,7 +6,8 @@ Freemarker library for Enonic XP
 The most straight forward way to get it going is probably jitpack, which builds and makes a public github repo available as a gradle dependency on-the-fly:
 
 Step 1: Add it in your root build.gradle at the end of repositories:
-```javascript
+
+```groovy
 allprojects {
   repositories {
     ...
@@ -25,7 +26,7 @@ dependencies {
 If you are on an Enonic XP 7 add the dependency like this:
 ```groovy
 dependencies {
-  include 'no.tine.xp:xp-lib-freemarker:2.0.0'
+  include 'no.tine.xp:xp-lib-freemarker:2.0.2'
 }
 ```
 
@@ -67,8 +68,38 @@ Example usage in Freemarker
 <a href="[@assetUrl path='css/main.css'/]">Link</a>
 <img src="[@imageUrl scale='block(50,50)' id='869b29a0-dccc-4d5e-afc5-81e5050a628d'/]">
 <p>[@localize locale='en' key='mystring'/]</p>
-
 ```
+
+#### Fixing unresolved references in IntelliJ
+
+If you are using one of the IDEs from Jetbrains, a [special comment syntax](https://www.jetbrains.com/help/idea/template-data-languages.html#special-comments) 
+exists that will fix unresolved references to *Enonic View Functions* in your project.
+
+You can simply add a file "*./src/main/resources/freemarker_implicit.ftl*" with the following contents to your project.
+
+```ftl
+[#ftl]
+[#-- @implicitly included --]
+
+[#macro pageUrl id="" path="" type="server"][/#macro]
+[#macro assetUrl path application="" type="server"][/#macro]
+[#macro imageUrl scale id="" path="" format="" quality=85 background="" filter="" type="server"][/#macro]
+[#macro attachmentUrl id="" path="" name="" label="source" download=false type="server"][/#macro]
+[#macro componentUrl id="" path="" component="" type="server"][/#macro]
+[#macro serviceUrl service application="" type="server"][/#macro]
+[#macro localize key locale=""][/#macro]
+[#macro processHtml value type="server"][/#macro]
+[#macro imagePlaceholder width height][/#macro]
+```
+
+> **Note:**  
+> **Protip**: You can provide type checking to your Freemarker-templates by creating `@ftlvariable`
+> comments on the top of your ftl-files.
+> 
+> ```ftl
+> [#-- @ftlvariable name="displayName" type="java.lang.String" --]
+> <h1>${displayName}</h1>
+> ```
 
 ### Freemarker documentation
 
