@@ -33,6 +33,7 @@ dependencies {
 Hopefully this should allow jitpack to build the project, and present it as a standard gradle package for Enonic XP :)
 
 ## Usage
+
 Just as you are used to with Thymeleaf in your controller
 
 ```javascript
@@ -44,6 +45,53 @@ exports.get = function(req) {
   }
 
   var view = resolve('template.ftl');
+  var html = freemarker.render(view, model);
+
+  return {
+    body: html
+  }
+};
+```
+
+You can also use inline templates instead of resolving a freemarker file.
+
+```javascript
+var freemarker = require('/lib/tineikt/freemarker');
+
+exports.get = function(req) {
+  var model = {
+     title: "Hello Freemarker!"
+  }
+
+  var html = freemarker.render({
+      template: "<h1>${title}</h1>"
+  }, model);
+
+  return {
+    body: html
+  }
+};
+```
+
+If your application has a long deployment time, you can speed up development by pointing freemarker directly at files
+on your local computer instead of in the deployed application. 
+
+Now you can just refresh the page after changing a file, instead of having to redeploy. 
+
+```javascript
+var freemarker = require('/lib/tineikt/freemarker');
+
+exports.get = function(req) {
+  var model = {
+
+  }
+
+  // I will put the resolved view back in after I'm finished testing with local file
+  // var view = resolve('template.ftl');
+  var view = {
+      baseDirPath: "/home/myuser/code/xp-my-project/src/main/resources",
+      filePath:    "/home/myuser/code/xp-my-project/src/main/resources/site/parts/article-view/article-view.ftl"
+  }  
   var html = freemarker.render(view, model);
 
   return {
@@ -92,7 +140,7 @@ You can simply add a file "*./src/main/resources/freemarker_implicit.ftl*" with 
 [#macro imagePlaceholder width height][/#macro]
 ```
 
-> **Note:**  
+> **Note**  
 > **Protip**: You can provide type checking to your Freemarker-templates by creating `@ftlvariable`
 > comments on the top of your ftl-files.
 > 

@@ -1,5 +1,7 @@
 package no.tine.xp.lib.freemarker;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
@@ -21,12 +23,15 @@ import freemarker.template.TemplateExceptionHandler;
 
 public final class FreemarkerProcessor {
 	private ResourceKey view;
+	private String baseDirPath;
+	private String textTemplate;
+	private String filePath;
 	private ResourceService resourceService;
 	private ScriptValue model;
 	private Map<String, PortalViewFunction> viewFunctions;
 	private final static Logger log = LoggerFactory.getLogger(FreemarkerProcessor.class);
 
-	private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_25);
+	private static final Configuration CONFIGURATION = new Configuration(Configuration.VERSION_2_3_31);
 
 	public static void setupFreemarker(final FreemarkerConfig config) {
 		CONFIGURATION.setDefaultEncoding(config.encoding());
@@ -57,6 +62,18 @@ public final class FreemarkerProcessor {
 		this.view = view;
 	}
 
+	public void setTextTemplate(final String textTemplate) {
+		this.textTemplate = textTemplate;
+	}
+
+	public void setFilePath(final String filePath) {
+		this.filePath = filePath;
+	}
+
+	public void setBaseDirPath(final String baseDirPath) {
+		this.baseDirPath = baseDirPath;
+	}
+
 	public void setModel(final ScriptValue model) {
 		this.model = model;
 	}
@@ -78,28 +95,53 @@ public final class FreemarkerProcessor {
 	}
 
 	private String doProcess() throws IOException, TemplateException {
-		final Resource resource = resourceService.getResource(this.view);
 		final Map<String, Object> map = this.model != null ? this.model.getMap() : Maps.newHashMap();
-
 		map.putAll(this.viewFunctions);
 
-		String key = resource.getKey().toString();
-		Template template = CONFIGURATION.getTemplate(key);
-
 		StringWriter sw = new StringWriter();
-		template.process(map, sw);
+		getTemplate().process(map, sw);
 		return sw.toString();
+	}
+
+	private Template getTemplate() throws IOException {
+		// Use a text template
+		if (this.textTemplate != null) {
+			Configuration config =  this.baseDirPath != null
+				? cloneConfigurationWithBaseDirPath(this.baseDirPath)
+				: CONFIGURATION;
+
+			return Template.getPlainTextTemplate(null, this.textTemplate, config);
+
+		// Use a local file (for development)
+		} else if(this.filePath != null) {
+			Configuration config =  this.baseDirPath != null
+					? cloneConfigurationWithBaseDirPath(this.baseDirPath)
+					: CONFIGURATION;
+
+			return new Template(null, new FileReader(this.filePath), config);
+		}
+
+		// Use a package resource (default Enonic behavior)
+		final Resource resource = resourceService.getResource(this.view);
+		String key = resource.getKey().toString();
+		return CONFIGURATION.getTemplate(key);
+	}
+
+	private Configuration cloneConfigurationWithBaseDirPath(String baseDirPath) throws IOException {
+		Configuration config = (Configuration) CONFIGURATION.clone();
+		config.setDirectoryForTemplateLoading(new File(baseDirPath));
+		return config;
 	}
 
 	private RuntimeException handleError(final TemplateException e) {
 		final ResourceKey resource = e.getTemplateSourceName() != null ? ResourceKey.from(e.getTemplateSourceName()) : null;
 
 		return ResourceProblemException.create()
-			.lineNumber(e.getLineNumber())
-			.resource(resource)
-			.cause(e)
-			.message(e.getMessageWithoutStackTop())
-			.build();
+				.lineNumber(e.getLineNumber())
+				.resource(resource)
+				.cause(e)
+				.message(e.getMessageWithoutStackTop())
+				.build();
 	}
 
 	private RuntimeException handleError(final IOException e) {
