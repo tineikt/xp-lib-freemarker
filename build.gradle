@@ -25,7 +25,8 @@ app {
 dependencies {
 	compile "com.enonic.xp:core-api:${xpVersion}"
 	compile "com.enonic.xp:portal-api:${xpVersion}"
-	compile "org.freemarker:freemarker:2.3.31"
+	compile "org.freemarker:freemarker:2.3.32"
+	compile "no.api.freemarker:freemarker-java8:2.1.0"
 }
 
 repositories {
