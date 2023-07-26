@@ -70,6 +70,24 @@ Example usage in Freemarker
 <p>[@localize locale='en' key='mystring'/]</p>
 ```
 
+### Formatting Dates
+
+You can format Java 8 dates (e.g. `java.time.LocalDateTime` or `java.time.ZonedDateTime`) inside your Freemarker template.
+
+The [lib-xp-time](https://github.com/ItemConsulting/lib-xp-time) XP-library provides access to the Java-types so that
+you can parse `strings` into `java.time.*` objects.
+
+```ftl
+[#-- @ftlvariable name="locale" type="java.lang.String" --]
+[#-- @ftlvariable name="date" type="java.time.ZonedDateTime" --]
+
+[#setting locale=locale]
+
+<time datetime="${date.format("ISO_OFFSET_DATE_TIME")}">
+  ${date.format("SHORT_DATE")}
+</time>
+```
+
 #### Fixing unresolved references in IntelliJ
 
 If you are using one of the IDEs from Jetbrains, a [special comment syntax](https://www.jetbrains.com/help/idea/template-data-languages.html#special-comments) 
@@ -92,7 +110,7 @@ You can simply add a file "*./src/main/resources/freemarker_implicit.ftl*" with 
 [#macro imagePlaceholder width height][/#macro]
 ```
 
-> **Note:**  
+> **Note**  
 > **Protip**: You can provide type checking to your Freemarker-templates by creating `@ftlvariable`
 > comments on the top of your ftl-files.
 > 
@@ -115,9 +133,12 @@ You are probably used to Thymeleaf and how some magic happens when you use the `
   <div data-portal-component="${component.path}" data-th-remove="tag" />
 </div>
 ```
+
 This magic is implemented using a Freemarker directive, `<@component path=component.path />`
 The same template, in Freemarker would then be.
-```html
-[#list regions.components as component]
-  [@component path=component.path /]
-[/#list]```
+
+```ftl
+[#list regions.components as comp]
+  [@component path=comp.path /]
+[/#list]
+```
