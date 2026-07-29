@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.enonic.xp.portal.PortalRequest;
 import com.enonic.xp.portal.PortalRequestAccessor;
-import com.enonic.xp.portal.view.ViewFunctionService;
+import no.tine.xp.lib.freemarker.view.ViewFunctionService;
 import com.enonic.xp.resource.ResourceService;
 import com.enonic.xp.script.bean.BeanContext;
 import com.enonic.xp.script.bean.ScriptBean;

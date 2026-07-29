@@ -1,5 +1,5 @@
 # <a href="https://www.tine.no/"><img src="https://webfiles.tine.no/Logo/TINE-logo.svg" alt="TINE Logo" width="70" align="right"></a> lib-freemarker
-Freemarker library for Enonic XP
+Freemarker library for Enonic XP. Supports Enonic XP 8 (the view functions are bundled with the library, since XP 8 removed them from core).
 
 ## Installation
 
@@ -29,6 +29,12 @@ dependencies {
   include 'no.tine.xp:xp-lib-freemarker:2.0.2'
 }
 ```
+If you are on an Enonic XP 8 add the dependency like this:
+```groovy
+dependencies {
+  include 'no.tine.xp:xp-lib-freemarker:3.0.0'
+}
+```
 
 Hopefully this should allow jitpack to build the project, and present it as a standard gradle package for Enonic XP :)
 
@@ -54,7 +60,7 @@ exports.get = function(req) {
 
 ### View Functions
 
-[Enonic View Functions documentation](http://xp.readthedocs.io/en/stable/reference/view-functions/index.html)
+[Enonic Portal library (URL functions) documentation](https://developer.enonic.com/docs/code/stable/libraries/lib-portal)
 
 Example usage in Thymeleaf:
 ```html

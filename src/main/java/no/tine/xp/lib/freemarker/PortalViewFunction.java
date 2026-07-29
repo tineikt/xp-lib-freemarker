@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.enonic.xp.portal.PortalRequest;
-import com.enonic.xp.portal.view.ViewFunctionParams;
-import com.enonic.xp.portal.view.ViewFunctionService;
+import no.tine.xp.lib.freemarker.view.ViewFunctionParams;
+import no.tine.xp.lib.freemarker.view.ViewFunctionService;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;

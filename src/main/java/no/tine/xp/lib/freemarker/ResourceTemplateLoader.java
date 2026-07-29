@@ -3,7 +3,6 @@ package no.tine.xp.lib.freemarker;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +26,7 @@ public class ResourceTemplateLoader implements TemplateLoader {
 	public Object findTemplateSource(String name) throws IOException {
 		logger.trace("Looking for file: [" + name + "]");
 
-		String[] parts = StringUtils.split(name, ':');
+		String[] parts = name.split(":");
 		if(parts.length != 2) {
 			return null;
 		}
