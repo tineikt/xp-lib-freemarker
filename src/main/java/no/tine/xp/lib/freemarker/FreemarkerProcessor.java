@@ -46,6 +46,12 @@ public final class FreemarkerProcessor {
 		// Let's load resources using our custom Enonic-based Resource Loader
 		CONFIGURATION.setTemplateLoader(new ResourceTemplateLoader(resourceService));
 
+		// TODO (security): HTML_DEBUG_HANDLER renders FreeMarker exception details
+		// (template paths, line numbers, model property names) directly into the HTTP
+		// response. On public-facing controllers this leaks internals to end users.
+		// Recommendation: make this config-driven - RETHROW_HANDLER (log only) in
+		// production, HTML_DEBUG_HANDLER only in dev. Left as-is during the XP8 upgrade
+		// since it is pre-existing behaviour; flagged for TINE to decide.
 		//CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);		// Throws exceptions to log file
 		CONFIGURATION.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);      // Shows exceptions on screen
 		CONFIGURATION.setObjectWrapper(new Java8ObjectWrapper(Configuration.VERSION_2_3_25));
